@@ -1,0 +1,57 @@
+version: '2'
+services:
+  rocketmq-broker-1-s:
+    image: 192.168.33.234/chaos/rocketmq
+    stdin_open: true
+    volumes:
+    - /opt/logs/broker1s:/root
+    tty: true
+    command:
+    - sh
+    - /opt/apache-rocketmq-all/bin/mqbroker
+    - -n
+    - 10.42.255.1:9876;10.42.255.2:9876
+    - -c
+    - /opt/apache-rocketmq-all/conf/2m-2s-sync/broker-a-s.properties
+    labels:
+      io.rancher.container.pull_image: always
+  rocketmq-namesrv-2:
+    image: 192.168.33.234/chaos/rocketmq
+    stdin_open: true
+    volumes:
+    - /opt/logs/namesrv2:/root
+    tty: true
+    command:
+    - sh
+    - /opt/apache-rocketmq-all/bin/mqnamesrv
+    labels:
+      io.rancher.container.pull_image: always
+      io.rancher.container.requested_ip: 10.42.255.2
+  rocketmq-namesrv-1:
+    image: 192.168.33.234/chaos/rocketmq
+    stdin_open: true
+    volumes:
+    - /opt/logs/namesrv1:/root
+    tty: true
+    command:
+    - sh
+    - /opt/apache-rocketmq-all/bin/mqnamesrv
+    labels:
+      io.rancher.container.pull_image: always
+      io.rancher.container.requested_ip: 10.42.255.1
+  rocketmq-broker-1:
+    image: 192.168.33.234/chaos/rocketmq
+    stdin_open: true
+    volumes:
+    - /opt/logs/broker1:/root
+    tty: true
+    command:
+    - sh
+    - /opt/apache-rocketmq-all/bin/mqbroker
+    - -n
+    - 10.42.255.1:9876;10.42.255.2:9876
+    - -c
+    - /opt/apache-rocketmq-all/conf/2m-2s-sync/broker-a.properties
+    labels:
+      io.rancher.container.pull_image: always
+      io.rancher.container.requested_ip: 10.42.255.3

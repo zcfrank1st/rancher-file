@@ -1,0 +1,11 @@
+docker run -d chaos/rocketmq sh /opt/apache-rocketmq-all/bin/mqbroker -n "192.168.33.192:9876" -c "/opt/apache-rocketmq-all/conf/2m-2s-sync/broker-a-s.properties"
+
+docker run -d chaos/rocketmq sh /opt/apache-rocketmq-all/bin/mqbroker -n "192.168.33.192:9876" -c "/opt/apache-rocketmq-all/conf/2m-2s-sync/broker-a.properties"
+
+docker run -d chaos/rocketmq sh /opt/apache-rocketmq-all/bin/mqnamesrv
+
+
+# 推镜像(私库带ip值)
+docker build --no-cache -t $DOCKER_REGISTRY_DEV/$CI_PROJECT_NAME .
+docker images --no-trunc --all --quiet --filter="dangling=true" | xargs --no-run-if-empty docker rmi
+docker push $DOCKER_REGISTRY_DEV/$CI_PROJECT_NAME
